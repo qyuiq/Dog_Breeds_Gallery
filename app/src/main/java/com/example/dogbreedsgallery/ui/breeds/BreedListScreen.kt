@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -40,6 +41,7 @@ import com.example.dogbreedsgallery.data.local.BreedEntity
 @Composable
 fun BreedListRoute(
     viewModel: BreedListViewModel,
+    listState: LazyListState,
     onBreedClick: (Int) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -47,7 +49,7 @@ fun BreedListRoute(
     LaunchedEffect(viewModel) {
         viewModel.events.collect { message -> snackbarHostState.showSnackbar(message) }
     }
-    BreedListScreen(state, viewModel::onQueryChange, viewModel::refresh, onBreedClick, snackbarHostState)
+    BreedListScreen(state, viewModel::onQueryChange, viewModel::refresh, onBreedClick, snackbarHostState, listState)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +60,7 @@ private fun BreedListScreen(
     onRefresh: () -> Unit,
     onBreedClick: (Int) -> Unit,
     snackbarHostState: SnackbarHostState,
+    listState: LazyListState,
 ) {
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
@@ -88,6 +91,7 @@ private fun BreedListScreen(
                             Text("Породы не найдены")
                         }
                     else -> LazyColumn(
+                        state = listState,
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {

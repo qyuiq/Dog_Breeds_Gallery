@@ -1,6 +1,7 @@
 package com.example.dogbreedsgallery.ui.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -37,6 +38,7 @@ private sealed interface GalleryRoute {
 @Composable
 fun AppNavigation(dependencies: AppDependencies) {
     val backStack = remember { mutableStateListOf<Any>(GalleryRoute.Breeds) }
+    val breedListState = rememberLazyListState()
     val current = backStack.lastOrNull()
     val showBottomBar = current == GalleryRoute.Breeds || current == GalleryRoute.Favorites
 
@@ -68,7 +70,7 @@ fun AppNavigation(dependencies: AppDependencies) {
                 when (route) {
                     GalleryRoute.Breeds -> NavEntry(route) {
                         val vm: BreedListViewModel = viewModel(factory = BreedListViewModelFactory(dependencies))
-                        BreedListRoute(vm) { backStack.add(GalleryRoute.Details(it)) }
+                        BreedListRoute(vm, breedListState) { backStack.add(GalleryRoute.Details(it)) }
                     }
                     GalleryRoute.Favorites -> NavEntry(route) {
                         val vm: FavoritesViewModel = viewModel(factory = FavoritesViewModelFactory(dependencies))
