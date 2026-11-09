@@ -1,6 +1,7 @@
 package com.example.dogbreedsgallery.ui.favorites
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.animateItem
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -42,7 +43,7 @@ private fun FavoritesScreen(favorites: List<BreedEntity>, onBreedClick: (Int) ->
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             items(favorites, key = { it.id }) { breed ->
-                Column(Modifier.fillMaxWidth().clickable { onBreedClick(breed.id) }) {
+                Column(Modifier.animateItem().fillMaxWidth().clickable { onBreedClick(breed.id) }) {
                     SubcomposeAsyncImage(
                         model = breed.imageUrl,
                         contentDescription = "Порода ${breed.name}",

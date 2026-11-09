@@ -1,6 +1,8 @@
 package com.example.dogbreedsgallery.ui.details
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -75,10 +78,20 @@ private fun BreedDetailsScreen(state: BreedDetailsUiState, onFavoriteClick: (Bre
         Column(Modifier.padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             androidx.compose.foundation.layout.Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(breed.name, Modifier.weight(1f), style = MaterialTheme.typography.headlineMedium)
+                val favoriteScale by animateFloatAsState(
+                    targetValue = if (breed.isFavorite) 1.15f else 1f,
+                    label = "favoriteScale",
+                )
+                val favoriteTint by animateColorAsState(
+                    targetValue = if (breed.isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    label = "favoriteTint",
+                )
                 IconButton(onClick = { onFavoriteClick(breed) }) {
                     Icon(
                         if (breed.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = if (breed.isFavorite) "Убрать из избранного" else "В избранное",
+                        tint = favoriteTint,
+                        modifier = Modifier.scale(favoriteScale),
                     )
                 }
             }

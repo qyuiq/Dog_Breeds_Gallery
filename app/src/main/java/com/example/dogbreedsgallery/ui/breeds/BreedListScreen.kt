@@ -1,6 +1,7 @@
 package com.example.dogbreedsgallery.ui.breeds
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.animateItem
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -82,7 +83,11 @@ private fun BreedListScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         items(state.breeds, key = { it.id }) { breed ->
-                            BreedCard(breed, onClick = { onBreedClick(breed.id) })
+                            BreedCard(
+                                breed,
+                                modifier = Modifier.animateItem(),
+                                onClick = { onBreedClick(breed.id) },
+                            )
                         }
                     }
                 }
@@ -92,9 +97,9 @@ private fun BreedListScreen(
 }
 
 @Composable
-private fun BreedCard(breed: BreedEntity, onClick: () -> Unit) {
+private fun BreedCard(breed: BreedEntity, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
-        Modifier.fillMaxWidth().clickable(onClick = onClick),
+        modifier.fillMaxWidth().clickable(onClick = onClick),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         SubcomposeAsyncImage(
