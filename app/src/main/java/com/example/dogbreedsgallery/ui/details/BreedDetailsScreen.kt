@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -23,8 +24,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import com.example.dogbreedsgallery.data.local.BreedEntity
 
 @Composable
@@ -58,10 +61,14 @@ private fun BreedDetailsScreen(state: BreedDetailsUiState, onFavoriteClick: (Bre
                 contentPadding = PaddingValues(horizontal = 24.dp),
                 pageSpacing = 12.dp,
             ) { page ->
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = imageUrls[page],
                     contentDescription = "${breed.name}, фото ${page + 1}",
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(300.dp),
+                    contentScale = ContentScale.Crop,
+                    loading = { com.example.dogbreedsgallery.ui.breeds.ImagePlaceholder("Загружаем фото…", true) },
+                    error = { com.example.dogbreedsgallery.ui.breeds.ImagePlaceholder("Фото недоступно") },
+                    success = { SubcomposeAsyncImageContent() },
                 )
             }
         }

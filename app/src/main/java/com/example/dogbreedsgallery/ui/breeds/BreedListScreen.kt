@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,8 +26,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import com.example.dogbreedsgallery.data.local.BreedEntity
 
 @Composable
@@ -94,10 +97,14 @@ private fun BreedCard(breed: BreedEntity, onClick: () -> Unit) {
         Modifier.fillMaxWidth().clickable(onClick = onClick),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = breed.imageUrl,
             contentDescription = "Порода ${breed.name}",
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(190.dp),
+            contentScale = ContentScale.Crop,
+            loading = { ImagePlaceholder("Загружаем фото…", loading = true) },
+            error = { ImagePlaceholder("Фото недоступно") },
+            success = { SubcomposeAsyncImageContent() },
         )
         Text(breed.name, style = MaterialTheme.typography.titleLarge)
         Text(
@@ -105,5 +112,16 @@ private fun BreedCard(breed: BreedEntity, onClick: () -> Unit) {
             style = MaterialTheme.typography.bodyMedium,
             maxLines = 2,
         )
+    }
+}
+
+@Composable
+internal fun ImagePlaceholder(message: String, loading: Boolean = false) {
+    Box(
+        Modifier.fillMaxSize().padding(12.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (loading) CircularProgressIndicator()
+        else Text(message, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
