@@ -8,6 +8,6 @@ data class BreedDto(
     val temperament: String?,
     val origin: String?,
     @Json(name = "life_span") val lifeSpan: String?,
-    val bredFor: String?,
-    val referenceImageId: String?,
+    @Json(name = "bred_for") val bredFor: String?,
+    @Json(name = "reference_image_id") val referenceImageId: String?,
 )

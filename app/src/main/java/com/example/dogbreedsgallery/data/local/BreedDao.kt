@@ -10,6 +10,9 @@ interface BreedDao {
     @Query("SELECT * FROM breeds ORDER BY name COLLATE NOCASE")
     fun observeBreeds(): Flow<List<BreedEntity>>
 
+    @Query("SELECT * FROM breeds")
+    suspend fun observeBreedsOnce(): List<BreedEntity>
+
     @Query("SELECT * FROM breeds WHERE isFavorite = 1 ORDER BY name COLLATE NOCASE")
     fun observeFavorites(): Flow<List<BreedEntity>>
 
