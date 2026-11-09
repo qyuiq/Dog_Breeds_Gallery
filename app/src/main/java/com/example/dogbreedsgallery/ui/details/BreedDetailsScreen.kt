@@ -75,10 +75,14 @@ private fun BreedDetailsScreen(state: BreedDetailsUiState, onFavoriteClick: (Bre
                     )
                 }
             }
-            Text("Происхождение: ${breed.origin ?: "не указано"}")
-            Text("Продолжительность жизни: ${breed.lifeSpan}")
+            Text("Происхождение: ${breed.origin?.takeIf(String::isNotBlank) ?: "не указано"}")
+            Text("Продолжительность жизни: ${breed.lifeSpan.ifBlank { "не указана" }}")
             Text("Темперамент: ${breed.temperament.ifBlank { "не указан" }}")
-            Text(breed.description?.takeIf(String::isNotBlank) ?: "Описание породы недоступно")
+            Text(
+                breed.description?.takeIf(String::isNotBlank)
+                    ?.let { "Назначение породы: $it" }
+                    ?: "Дополнительная информация о породе отсутствует",
+            )
         }
     }
 }
