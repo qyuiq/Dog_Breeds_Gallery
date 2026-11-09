@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.example.dogbreedsgallery.data.local.BreedEntity
+import kotlinx.coroutines.launch
 
 @Composable
 fun BreedListRoute(
@@ -46,10 +48,21 @@ fun BreedListRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(viewModel) {
         viewModel.events.collect { message -> snackbarHostState.showSnackbar(message) }
     }
-    BreedListScreen(state, viewModel::onQueryChange, viewModel::refresh, onBreedClick, snackbarHostState, listState)
+    BreedListScreen(
+        state = state,
+        onQueryChange = { query ->
+            viewModel.onQueryChange(query)
+            coroutineScope.launch { listState.scrollToItem(0) }
+        },
+        onRefresh = viewModel::refresh,
+        onBreedClick = onBreedClick,
+        snackbarHostState = snackbarHostState,
+        listState = listState,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,9 +75,6 @@ private fun BreedListScreen(
     snackbarHostState: SnackbarHostState,
     listState: LazyListState,
 ) {
-    LaunchedEffect(state.query) {
-        listState.scrollToItem(0)
-    }
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
             OutlinedTextField(
