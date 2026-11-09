@@ -27,7 +27,8 @@ class BreedRepository(
                 origin = breed.origin,
                 lifeSpan = breed.lifeSpan.orEmpty(),
                 description = breed.bredFor,
-                imageUrl = breed.referenceImageId?.let { imageId ->
+                imageUrl = breed.image?.url?.takeIf(String::isNotBlank)
+                    ?: breed.referenceImageId?.let { imageId ->
                     "https://cdn2.thedogapi.com/images/$imageId.jpg"
                 }.orEmpty(),
                 isFavorite = cachedFavorites[breed.id] ?: false,
@@ -38,4 +39,7 @@ class BreedRepository(
 
     suspend fun setFavorite(id: Int, isFavorite: Boolean) =
         breedDao.setFavorite(id, isFavorite)
+
+    suspend fun updateBreedImage(id: Int, imageUrl: String) =
+        breedDao.updateImageUrl(id, imageUrl)
 }

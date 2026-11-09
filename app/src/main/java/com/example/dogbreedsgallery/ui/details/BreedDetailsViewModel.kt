@@ -44,6 +44,9 @@ class BreedDetailsViewModel(
             isLoadingImages.value = true
             try {
                 images.value = dogApi.getBreedImages(breedId)
+                images.value.firstOrNull()?.url?.takeIf(String::isNotBlank)?.let { imageUrl ->
+                    repository.updateBreedImage(breedId, imageUrl)
+                }
             } catch (_: Exception) {
                 // The cached breed image remains available when the gallery request fails.
             } finally {

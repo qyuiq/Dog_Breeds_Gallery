@@ -24,4 +24,7 @@ interface BreedDao {
 
     @Query("UPDATE breeds SET isFavorite = :isFavorite WHERE id = :breedId")
     suspend fun setFavorite(breedId: Int, isFavorite: Boolean)
+
+    @Query("UPDATE breeds SET imageUrl = :imageUrl WHERE id = :breedId")
+    suspend fun updateImageUrl(breedId: Int, imageUrl: String)
 }
