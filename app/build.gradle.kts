@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -33,6 +35,18 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+
+    val localProperties = Properties().apply {
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) localPropertiesFile.inputStream().use(::load)
+    }
+    val dogApiKey = localProperties.getProperty("DOG_API_KEY", "")
+        .replace("\\", "\\\\")
+        .replace("\"", "\\\"")
+    defaultConfig {
+        buildConfigField("String", "DOG_API_KEY", "\"$dogApiKey\"")
     }
 }
 
