@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.dogbreedsgallery.data.BreedRepository
 import com.example.dogbreedsgallery.data.local.BreedEntity
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -28,6 +30,8 @@ class BreedListViewModel(
     private val isRefreshing = MutableStateFlow(false)
     private val isLoading = MutableStateFlow(true)
     private val errorMessage = MutableStateFlow<String?>(null)
+    private val _events = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
 
     val uiState: StateFlow<BreedListUiState> = combine(
         repository.observeBreeds(), query, isRefreshing, isLoading, errorMessage,
@@ -56,9 +60,9 @@ class BreedListViewModel(
             try {
                 repository.refreshBreeds()
             } catch (exception: Exception) {
-                if (repository.getBreedsSnapshot().isEmpty()) {
-                    errorMessage.value = exception.localizedMessage ?: "Не удалось загрузить породы"
-                }
+                val message = exception.localizedMessage ?: "Не удалось загрузить породы"
+                if (repository.getBreedsSnapshot().isEmpty()) errorMessage.value = message
+                else _events.emit("Не удалось обновить список. Показаны сохранённые породы.")
             } finally {
                 isLoading.value = false
                 isRefreshing.value = false
