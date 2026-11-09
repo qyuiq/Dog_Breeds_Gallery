@@ -62,6 +62,9 @@ private fun BreedListScreen(
     snackbarHostState: SnackbarHostState,
     listState: LazyListState,
 ) {
+    LaunchedEffect(state.query) {
+        listState.scrollToItem(0)
+    }
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
             OutlinedTextField(
