@@ -56,7 +56,9 @@ class BreedListViewModel(
             try {
                 repository.refreshBreeds()
             } catch (exception: Exception) {
-                errorMessage.value = exception.localizedMessage ?: "Не удалось загрузить породы"
+                if (repository.getBreedsSnapshot().isEmpty()) {
+                    errorMessage.value = exception.localizedMessage ?: "Не удалось загрузить породы"
+                }
             } finally {
                 isLoading.value = false
                 isRefreshing.value = false

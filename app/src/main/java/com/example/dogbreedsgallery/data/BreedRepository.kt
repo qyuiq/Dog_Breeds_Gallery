@@ -11,6 +11,8 @@ class BreedRepository(
 ) {
     fun observeBreeds(): Flow<List<BreedEntity>> = breedDao.observeBreeds()
 
+    suspend fun getBreedsSnapshot(): List<BreedEntity> = breedDao.observeBreedsOnce()
+
     fun observeFavorites(): Flow<List<BreedEntity>> = breedDao.observeFavorites()
 
     fun observeBreed(id: Int): Flow<BreedEntity?> = breedDao.observeBreed(id)
