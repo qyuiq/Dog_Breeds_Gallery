@@ -6,6 +6,7 @@ import com.example.dogbreedsgallery.data.BreedRepository
 import com.example.dogbreedsgallery.data.local.BreedEntity
 import com.example.dogbreedsgallery.data.remote.DogApiService
 import com.example.dogbreedsgallery.data.remote.model.BreedImageDto
+import com.example.dogbreedsgallery.domain.FavoriteToggleUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ class BreedDetailsViewModel(
     private val breedId: Int,
     private val repository: BreedRepository,
     private val dogApi: DogApiService,
+    private val favoriteToggleUseCase: FavoriteToggleUseCase = FavoriteToggleUseCase(),
 ) : ViewModel() {
     private val images = MutableStateFlow<List<BreedImageDto>>(emptyList())
     private val isLoadingImages = MutableStateFlow(false)
@@ -36,7 +38,7 @@ class BreedDetailsViewModel(
     }
 
     fun toggleFavorite(breed: BreedEntity) {
-        viewModelScope.launch { repository.setFavorite(breed.id, !breed.isFavorite) }
+        viewModelScope.launch { repository.setFavorite(breed.id, favoriteToggleUseCase.execute(breed.isFavorite)) }
     }
 
     private fun loadImages() {
