@@ -30,7 +30,7 @@ fun FavoritesRoute(viewModel: FavoritesViewModel, onBreedClick: (Int) -> Unit) {
 }
 
 @Composable
-private fun FavoritesScreen(favorites: List<BreedEntity>, onBreedClick: (Int) -> Unit) {
+fun FavoritesScreen(favorites: List<BreedEntity>, onBreedClick: (Int) -> Unit) {
     if (favorites.isEmpty()) {
         androidx.compose.foundation.layout.Box(
             Modifier.fillMaxSize(),
