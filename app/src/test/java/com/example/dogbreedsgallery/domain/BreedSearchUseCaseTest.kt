@@ -38,7 +38,7 @@ class BreedSearchUseCaseTest {
 
     @Test
     fun `поиск сохраняет порядок пород из исходного списка`() {
-        val result = useCase.execute(listOf(breed(1, "Akita"), breed(2, "Airedale Terrier")), "ai")
+        val result = useCase.execute(listOf(breed(1, "Akita"), breed(2, "Airedale Terrier")), "a")
 
         assertEquals(listOf("Akita", "Airedale Terrier"), result.map { it.name })
     }
