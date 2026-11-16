@@ -9,35 +9,35 @@ class BreedSearchUseCaseTest {
     private val breeds = listOf(breed(1, "Akita"), breed(2, "Beagle"))
 
     @Test
-    fun `поиск игнорирует регистр и пробелы по краям запроса`() {
+    fun searchIsCaseInsensitiveAndTrimsQuery() {
         val result = useCase.execute(breeds, "  akITA  ")
 
         assertEquals(listOf("Akita"), result.map { it.name })
     }
 
     @Test
-    fun `пустой запрос возвращает все породы`() {
+    fun emptyQueryReturnsAllBreeds() {
         val result = useCase.execute(breeds, "   ")
 
         assertEquals(breeds, result)
     }
 
     @Test
-    fun `поиск находит часть названия породы`() {
+    fun searchFindsPartOfBreedName() {
         val result = useCase.execute(breeds, "eag")
 
         assertEquals(listOf("Beagle"), result.map { it.name })
     }
 
     @Test
-    fun `поиск без совпадений возвращает пустой список`() {
+    fun searchWithoutMatchesReturnsEmptyList() {
         val result = useCase.execute(breeds, "husky")
 
         assertEquals(emptyList<BreedEntity>(), result)
     }
 
     @Test
-    fun `поиск сохраняет порядок пород из исходного списка`() {
+    fun searchPreservesOriginalBreedOrder() {
         val result = useCase.execute(listOf(breed(1, "Akita"), breed(2, "Airedale Terrier")), "a")
 
         assertEquals(listOf("Akita", "Airedale Terrier"), result.map { it.name })

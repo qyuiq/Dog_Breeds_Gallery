@@ -8,12 +8,12 @@ class FavoriteToggleUseCaseTest {
     private val useCase = FavoriteToggleUseCase()
 
     @Test
-    fun `добавляет породу в избранное`() {
+    fun addsBreedToFavorites() {
         assertTrue(useCase.execute(false))
     }
 
     @Test
-    fun `удаляет породу из избранного`() {
+    fun removesBreedFromFavorites() {
         assertFalse(useCase.execute(true))
     }
 }

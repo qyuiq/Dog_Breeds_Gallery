@@ -20,7 +20,7 @@ class BreedFlowIntegrationTest {
     @get:Rule val mainDispatcherRule = MainDispatcherRule()
 
     @Test
-    fun `обновление API проходит через репозиторий в состояние каталога`() = runTest {
+    fun apiRefreshFlowsThroughRepositoryToCatalogState() = runTest {
         val dao = FakeBreedDao()
         val repository = BreedRepository(dao, FakeDogApiService(remoteBreeds = listOf(dto(1, "Akita"))))
         val viewModel = BreedListViewModel(repository)
@@ -33,7 +33,7 @@ class BreedFlowIntegrationTest {
     }
 
     @Test
-    fun `поисковый запрос ViewModel использует доменную фильтрацию`() = runTest {
+    fun viewModelSearchQueryUsesDomainFiltering() = runTest {
         val dao = FakeBreedDao()
         val repository = BreedRepository(dao, FakeDogApiService(remoteBreeds = listOf(dto(1, "Akita"), dto(2, "Beagle"))))
         val viewModel = BreedListViewModel(repository)
@@ -48,7 +48,7 @@ class BreedFlowIntegrationTest {
     }
 
     @Test
-    fun `изменение избранного в деталях обновляет локальные данные`() = runTest {
+    fun favoriteChangeInDetailsUpdatesLocalData() = runTest {
         val entity = BreedEntity(1, "Akita", "", null, "", null, "")
         val dao = FakeBreedDao(listOf(entity))
         val api = FakeDogApiService()

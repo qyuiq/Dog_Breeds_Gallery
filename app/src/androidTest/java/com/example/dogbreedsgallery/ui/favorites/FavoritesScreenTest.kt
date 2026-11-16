@@ -14,7 +14,7 @@ class FavoritesScreenTest {
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun пустоеИзбранноеПоказываетПонятноеСообщение() {
+    fun emptyFavoritesShowsHelpfulMessage() {
         composeRule.setContent {
             DogBreedsGalleryTheme {
                 FavoritesScreen(emptyList()) {}
@@ -25,7 +25,7 @@ class FavoritesScreenTest {
     }
 
     @Test
-    fun избранноеПоказываетСохраненнуюПороду() {
+    fun favoritesShowsSavedBreed() {
         composeRule.setContent {
             DogBreedsGalleryTheme {
                 FavoritesScreen(listOf(breed("Akita"))) {}
