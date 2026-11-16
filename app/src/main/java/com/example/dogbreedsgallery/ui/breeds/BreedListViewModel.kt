@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dogbreedsgallery.data.BreedRepository
 import com.example.dogbreedsgallery.data.local.BreedEntity
+import com.example.dogbreedsgallery.domain.BreedSearchUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -25,6 +26,7 @@ data class BreedListUiState(
 
 class BreedListViewModel(
     private val repository: BreedRepository,
+    private val breedSearchUseCase: BreedSearchUseCase = BreedSearchUseCase(),
 ) : ViewModel() {
     private val query = MutableStateFlow("")
     private val isRefreshing = MutableStateFlow(false)
@@ -37,7 +39,7 @@ class BreedListViewModel(
         repository.observeBreeds(), query, isRefreshing, isLoading, errorMessage,
     ) { breeds, searchQuery, refreshing, loading, error ->
         BreedListUiState(
-            breeds = breeds.filter { it.name.contains(searchQuery, ignoreCase = true) },
+            breeds = breedSearchUseCase.execute(breeds, searchQuery),
             query = searchQuery,
             isRefreshing = refreshing,
             isLoading = loading,
